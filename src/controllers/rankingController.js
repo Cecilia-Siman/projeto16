@@ -16,7 +16,7 @@ export async function ranking(req,res) {
         res.send(ranking).status(201);
 
     }   catch (error) {
-        //console.log(error);
+
         res.sendStatus(401);
         
     }

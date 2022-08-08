@@ -1,34 +1,9 @@
 import connection from "../db/postgres.js";
-import jwt from 'jsonwebtoken';
-
-import dotenv from 'dotenv';
-dotenv.config();
-
 import { nanoid } from "nanoid";
 
-
 export async function shortenUrl(req,res) {
-    /*const { authorization } = req.headers;
-    const token = authorization?.replace('Bearer ', '')
-
-    const secretkey = process.env.JWT_SECRET;*/
-
-    try {
-        /*const dados = jwt.verify(token, secretkey);
-        // dados agora terá { email: "emaildapessoa@email.com" }*/
 
         try {
-            /*
-
-            const { rows:userInfo } = await connection.query(
-            'SELECT * FROM users WHERE email = $1',
-            [dados.email]
-            );
-        
-            if (userInfo.length === 0) {
-                return res.sendStatus(401);
-            
-            }*/
             const userInfo = res.locals.userInfo;
 
             const newUrl= req.body.url;
@@ -40,17 +15,12 @@ export async function shortenUrl(req,res) {
             [userInfo[0].id, newUrl, shortUrl,0]
             );
             res.send({
-                "shortUrl": shortUrl // aqui o identificador que for gerado
+                "shortUrl": shortUrl
             }).status(201);
         } catch (error) {
             console.log(error);
             res.sendStatus(500);
         }
-    }   catch (error) {
-        //console.log(error);
-        res.sendStatus(401);
-        
-    }
 }
 
 export async function urlById(req,res) {
@@ -81,7 +51,7 @@ export async function urlById(req,res) {
 export async function urlRedirect(req,res) {
     try {
         const shortUrl= req.params.shortUrl;    
-        //console.log(shortUrl);
+        
 
         const { rows:urlInfo } = await connection.query(
           'SELECT * FROM urls WHERE "shortUrl" = $1',
@@ -109,23 +79,9 @@ export async function urlRedirect(req,res) {
 }
 
 export async function deleteUrl(req,res) {
-    /*const { authorization } = req.headers;
-    const token = authorization?.replace('Bearer ', '')
-
-    const secretkey = process.env.JWT_SECRET;*/
 
     try {
-        /*const dados = jwt.verify(token, secretkey);*/
 
-        try {
-            /*const { rows:userInfo } = await connection.query(
-            'SELECT * FROM users WHERE email = $1',
-            [dados.email]
-            );
-        
-            if (userInfo.length === 0) {
-                return res.sendStatus(401);
-            }*/
             const userInfo = res.locals.userInfo;
             const id = parseInt(req.params.id);
             const { rows:urlInfo } = await connection.query(
@@ -149,9 +105,5 @@ export async function deleteUrl(req,res) {
             console.log(error);
             res.sendStatus(500);
         }
-    }   catch (error) {
-        //console.log(error);
-        res.sendStatus(401);
-        
-    }
+
 }
