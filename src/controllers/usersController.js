@@ -5,31 +5,32 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export async function users(req,res) {
-    const { authorization } = req.headers;
+    /*const { authorization } = req.headers;
     const token = authorization?.replace('Bearer ', '')
 
-    const secretkey = process.env.JWT_SECRET;
+    const secretkey = process.env.JWT_SECRET;*/
+    const userInfo = res.locals.userInfo;
 
     try {
-        const dados = jwt.verify(token, secretkey);
+        //const dados = jwt.verify(token, secretkey);
         // dados agora terá { email: "emaildapessoa@email.com" }
 
         try {
-            const { rows:userInfo } = await connection.query(
+            /*const { rows:userInfo } = await connection.query(
             'SELECT * FROM users WHERE email = $1',
             [dados.email]
             );
         
             if (userInfo.length === 0) {
                 return res.sendStatus(401);
-            }
+            }*/
         
             let {rows:sumVisits} = await connection.query(
                 'SELECT sum("visitCount") FROM urls WHERE "userId"=$1 GROUP BY "userId"',
             [userInfo[0].id]
             );
             
-            console.log("soma:",sumVisits);
+            //console.log("soma:",sumVisits);
             const {rows:urlsList} = await connection.query(
                 'SELECT id,url,"shortUrl","visitCount" FROM urls WHERE "userId"=$1',
                 [userInfo[0].id]
@@ -58,7 +59,7 @@ export async function users(req,res) {
 
 
 
-            res.send(objUser).status(201);
+            return res.send(objUser).status(201);
         } catch (error) {
             console.log(error);
             res.sendStatus(500);

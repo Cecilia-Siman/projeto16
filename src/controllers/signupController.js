@@ -11,7 +11,7 @@ export async function signup(req,res) {
         );
     
         if (rowCount > 0) {
-            return res.sendStatus(409);
+            return res.status(409).send("email já cadastrado");
           
         }
     

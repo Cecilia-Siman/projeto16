@@ -8,19 +8,17 @@ import { nanoid } from "nanoid";
 
 
 export async function shortenUrl(req,res) {
-    const { authorization } = req.headers;
+    /*const { authorization } = req.headers;
     const token = authorization?.replace('Bearer ', '')
 
-    const secretkey = process.env.JWT_SECRET;
+    const secretkey = process.env.JWT_SECRET;*/
 
     try {
-        const dados = jwt.verify(token, secretkey);
-        // dados agora terá { email: "emaildapessoa@email.com" }
+        /*const dados = jwt.verify(token, secretkey);
+        // dados agora terá { email: "emaildapessoa@email.com" }*/
 
         try {
-            const newUrl= req.body.url;
-            let shortUrl = newUrl;
-            shortUrl = nanoid();
+            /*
 
             const { rows:userInfo } = await connection.query(
             'SELECT * FROM users WHERE email = $1',
@@ -30,7 +28,12 @@ export async function shortenUrl(req,res) {
             if (userInfo.length === 0) {
                 return res.sendStatus(401);
             
-            }
+            }*/
+            const userInfo = res.locals.userInfo;
+
+            const newUrl= req.body.url;
+            let shortUrl = newUrl;
+            shortUrl = nanoid();
         
             await connection.query(
             'INSERT INTO urls ("userId", url, "shortUrl", "visitCount") VALUES ($1, $2, $3, $4)',
@@ -78,7 +81,7 @@ export async function urlById(req,res) {
 export async function urlRedirect(req,res) {
     try {
         const shortUrl= req.params.shortUrl;    
-        console.log(shortUrl);
+        //console.log(shortUrl);
 
         const { rows:urlInfo } = await connection.query(
           'SELECT * FROM urls WHERE "shortUrl" = $1',
@@ -106,23 +109,24 @@ export async function urlRedirect(req,res) {
 }
 
 export async function deleteUrl(req,res) {
-    const { authorization } = req.headers;
+    /*const { authorization } = req.headers;
     const token = authorization?.replace('Bearer ', '')
 
-    const secretkey = process.env.JWT_SECRET;
+    const secretkey = process.env.JWT_SECRET;*/
 
     try {
-        const dados = jwt.verify(token, secretkey);
+        /*const dados = jwt.verify(token, secretkey);*/
 
         try {
-            const { rows:userInfo } = await connection.query(
+            /*const { rows:userInfo } = await connection.query(
             'SELECT * FROM users WHERE email = $1',
             [dados.email]
             );
         
             if (userInfo.length === 0) {
                 return res.sendStatus(401);
-            }
+            }*/
+            const userInfo = res.locals.userInfo;
             const id = parseInt(req.params.id);
             const { rows:urlInfo } = await connection.query(
                 'SELECT * FROM urls WHERE id = $1',
